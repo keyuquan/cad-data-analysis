@@ -53,7 +53,7 @@ public class IbdTransterDataDao {
     public static String addIbdTransterData(IbdTransterData ibdTransterData) {
         try {
             // queryRunner.insert(sql, rsh)
-            String sql = "insert into ibd_transter_data (id, area_type, data_source, log_type, table_name, condition_stime, condition_etime, data_count, status, remark, retry) values(?,?,?,?,?,?,?,?,?,?,?)  ON DUPLICATE KEY UPDATE table_name=VALUES(table_name), condition_stime=VALUES(condition_stime),condition_etime=VALUES(condition_etime)";
+            String sql = "insert into ibd_transter_data (id, area_type, data_source, log_type, table_name, condition_stime, condition_etime, data_count, status, remark, retry) values(?,?,?,?,?,?,?,?,?,?,?)  ON DUPLICATE KEY UPDATE table_name=VALUES(table_name), condition_etime=VALUES(condition_etime)";
             List<Object> paramList = new ArrayList<Object> ();
             String thisId = UUID.randomUUID ().toString ().replace ( "-", "" );
             paramList.add ( thisId );
@@ -117,8 +117,9 @@ public class IbdTransterDataDao {
      * @return
      */
     public static List<IbdTransterData> getExceptionRetryDataByLogType(String areaType, String logType, String stime, String etime) {
+
         try {
-            String showCols = "id, retry, system_code AS 'systemCode', data_source AS 'dataSource', log_type AS 'logType', table_name AS 'tableName', condition_stime AS 'conditionStime', condition_etime AS 'conditionEtime', status AS 'status', create_time AS 'createTime'";
+            String showCols = "id, retry, area_type AS 'areaType', data_source AS 'dataSource', log_type AS 'logType', table_name AS 'tableName', condition_stime AS 'conditionStime', condition_etime AS 'conditionEtime', status AS 'status', create_time AS 'createTime'";
             String sql = "SELECT " + showCols + " FROM ibd_transter_data WHERE status <= 0 AND retry < 3 ";
             if ( StringUtils.isNotEmpty ( areaType ) ) {
                 sql += "AND area_type = '" + areaType + "' ";
@@ -142,5 +143,5 @@ public class IbdTransterDataDao {
         return null;
     }
 
-    
+
 }
