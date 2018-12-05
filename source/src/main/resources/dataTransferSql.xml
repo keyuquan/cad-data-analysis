@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataTransfer>
+
+    <!-- #########################  app1    ########################## -->
+
+    <sql id="hb_alarmevent_log" AreaType="hb" dbType="mysql">
+        <![CDATA[
+			select  *  from  tbalarmevent where   lastModifyTime  >= '${stime}'  and   lastModifyTime< '${etime}'
+		]]>
+    </sql>
+
+</dataTransfer>
