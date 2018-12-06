@@ -70,10 +70,10 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
     // 导数据的方式状态（normal-正常 ; renew-重传）
     private String transferStatus = null;
 
-    // 导数据的开始时间 "yyyy-MM-dd_HH:mm:ss" 格式
+    // 导数据的开始时间 "yyyy-MM-dd HH:mm:ss" 格式
     private String startTime = null;
 
-    // 导数据的结束时间 "yyyy-MM-dd_HH:mm:ss" 格式
+    // 导数据的结束时间 "yyyy-MM-dd HH:mm:ss" 格式
     private String endTime = null;
 
     // 导数据的开始时间（毫秒数）
@@ -170,11 +170,12 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                 IbdTransterData ibdTransterData = new IbdTransterData ( areaType, logType, DatabaseTypeEnum.MYSQL.getCode () );
                 String lastTransferTime = IbdTransterDataDao.getLatestTransferTime ( ibdTransterData );
                 if ( StringUtils.isNotEmpty ( lastTransferTime ) ) {
+                    startTime = lastTransferTime;
                     startTimeMillis = timeDf.parse ( startTime ).getTime ();
                 }
             }
-            LOGGER.error ( "startTime : " + startTime );
-            LOGGER.error ( "startTimeMillis : " + startTime );
+            LOGGER.error ( "@@@ startTime : " + startTime );
+            LOGGER.error ( "@@@ startTimeMillis : " + startTimeMillis );
         } catch (Exception e) {
             e.printStackTrace ();
             LOGGER.error ( "加载配置文件失败 : " + e.getMessage () );
@@ -191,9 +192,9 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
         scheduledExecutorService = Executors.newScheduledThreadPool ( threadCount );
         // 循环启动多线程
         for (int k = 0; k < threadCount; k++) {
-            //10秒钟运行一个
             try {
-                Thread.sleep ( 10000l );
+                // 不同线程中间休息5 秒
+                Thread.sleep ( 5000l );
             } catch (InterruptedException e) {
                 e.printStackTrace ();
             }
@@ -201,14 +202,16 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                 @Override
                 public void run() {
                     Long curCount = count.get ();
-
-                    // 这里是计算结束时间
+                    // 计算结束时间
                     Long curEnd = startTimeMillis + (curCount + 1) * queryInteralSec * 1000L;
-                    if ( (System.currentTimeMillis () - 5 * 60 * 1000L) >= curEnd ) {
-                        curCount = count.addAndGet ( 1 );
+
+                    // 当前时间 要大于 结束时间 ，避免数据重复抽取 ，2 秒是为了避免时间偏差
+                    if ( System.currentTimeMillis () > curEnd + 2000L ) {
                         try {
-                            long begin = startTimeMillis + (curCount - 1) * queryInteralSec * 1000L;
+                            long begin = startTimeMillis + curCount * queryInteralSec * 1000L;
                             long end = begin + queryInteralSec * 1000L;
+                            curCount = count.addAndGet ( 1 );
+
                             // 如果设置了“结束时间”
                             if ( endTimeMillis != null && endTimeMillis > 0 ) {
                                 if ( begin >= endTimeMillis ) {
@@ -226,15 +229,16 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                             IbdTransterData ibdTransterData = new IbdTransterData ( areaType, logType, DatabaseTypeEnum.MYSQL.getCode () );
                             ibdTransterData.setConditionStime ( timeStr_begin );
                             ibdTransterData.setConditionEtime ( timeStr_end );
+                            ibdTransterData.setDataCount ( 0l );
                             String thisLogId = IbdTransterDataDao.addIbdTransterData ( ibdTransterData );
                             // 2: 查询数据，并导入到channel中
                             List<Object[]> dataList = null;
                             try {
                                 dataList = MysqlDataDao.getMysqlData ( flumeContext, timeStr_begin, timeStr_end );
+                                LOGGER.info ( "@@@ timeStr_begin : " + timeStr_begin + "   " + timeStr_end + "  count= " + dataList.size () );
                             } catch (Exception e) {
                                 e.printStackTrace ();
-                                LOGGER.error ( "@@@ 查询失败 : " + e.getMessage () );
-                                // 查询失败！
+                                LOGGER.error ( "@@@ search error : " + e.getMessage () );
                                 ibdTransterData.setId ( thisLogId );
                                 ibdTransterData.setStatus ( DataStatusEnum.ERROR_QUERY.getCode () );
                                 ibdTransterData.setRemark ( DataStatusEnum.ERROR_QUERY.getName () );
@@ -245,8 +249,7 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                                 sendMassageTochannel ( dataList );
                             } catch (Exception e) {
                                 e.printStackTrace ();
-                                LOGGER.error ( "@@@ 导入失败 : " + e.getMessage () );
-                                // 导入失败！
+                                LOGGER.error ( "@@@ import error : " + e.getMessage () );
                                 ibdTransterData.setId ( thisLogId );
                                 ibdTransterData.setStatus ( DataStatusEnum.ERROR_IMPORT.getCode () );
                                 ibdTransterData.setDataCount ( dataList != null ? (long) dataList.size () : 0l );
@@ -264,7 +267,7 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                             e.printStackTrace ();
                             long errorBegin = startTimeMillis + (curCount - 1) * queryInteralSec * 1000L;
                             String errorParam = "[errorBegin:" + errorBegin + ", startTime:'" + startTime + "', queryInteralSec:" + queryInteralSec + "S, curCount:" + curCount + ", ]";
-                            LOGGER.error ( "@@@ 程序异常 : " + errorParam );
+                            LOGGER.error ( "@@@ system error : " + errorParam );
                             LOGGER.error ( "@@@ errorMsg: " + e.getMessage () );
                         }
                     }
@@ -293,11 +296,8 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                                     String thisConditionStime = thisIbdTransterData.getConditionStime ();
                                     String thisConditionEtime = thisIbdTransterData.getConditionEtime ();
                                     retryDataList = MysqlDataDao.getMysqlData ( flumeContext, thisConditionStime, thisConditionEtime );
-
                                     sendMassageTochannel ( retryDataList );
-
                                     // 记录日志（修改成功标记位）
-                                    // thisIbdTransterData.setId(thisIbdTransterData.getId());
                                     thisIbdTransterData.setDataCount ( retryDataList != null ? (long) retryDataList.size () : 0l );
                                     thisIbdTransterData.setStatus ( DataStatusEnum.SUCCESS.getCode () );
                                     thisIbdTransterData.setRetry ( thisIbdTransterData.getRetry () + 1 );
@@ -305,7 +305,7 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                                 } catch (Exception e) {
                                     e.printStackTrace ();
                                     String errorParam = "[AreaType: " + thisIbdTransterData.getAreaType () + ", logType: " + thisIbdTransterData.getLogType () + " , stime: " + thisIbdTransterData.getConditionStime () + ", etime: " + thisIbdTransterData.getConditionEtime () + "]";
-                                    LOGGER.error ( "@@@ retry 异常，查询条件 : " + errorParam );
+                                    LOGGER.error ( "@@@ retry error : " + errorParam );
                                     LOGGER.error ( "@@@ retry errorMsg: " + e.getMessage () );
                                     // 记录日志数据（修改"retry"次数，加 1 ）
                                     // thisIbdTransterData.setId(thisIbdTransterData.getId());
@@ -334,7 +334,6 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                     retryEventList.add ( thisEvent );
                 }
             }
-            // channelProcessor.processEventBatch(retryEventList);
             if ( retryEventList.size () > 10000 ) {
                 int startIdx = 0;
                 int importCount = 10000;

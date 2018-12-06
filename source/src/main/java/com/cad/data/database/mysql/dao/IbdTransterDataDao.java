@@ -18,6 +18,7 @@ import java.util.UUID;
 public class IbdTransterDataDao {
 
     private static QueryRunner queryRunner = JDBCTools.getIbdQueryRunner ();
+    private static DateFormat timeDf = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss" );
 
     /**
      * 获取导数据记录中，“最晚的”导入时间（断点续传）
@@ -28,7 +29,7 @@ public class IbdTransterDataDao {
      */
     public static String getLatestTransferTime(IbdTransterData ibdTransterData) throws Exception {
         if ( ibdTransterData != null && StringUtils.isNotEmpty ( ibdTransterData.getAreaType () ) ) {
-            String sqlStr = "SELECT condition_etime as conditionEtime FROM ibd_transter_data WHERE  status=1 and  area_type = '" + ibdTransterData.getAreaType () + "' ";
+            String sqlStr = "SELECT condition_etime as conditionEtime FROM ibd_transter_data WHERE  area_type = '" + ibdTransterData.getAreaType () + "' ";
             if ( StringUtils.isNotEmpty ( ibdTransterData.getDataSource () ) ) {
                 sqlStr += "AND data_source = '" + ibdTransterData.getDataSource () + "' ";
             }
@@ -51,8 +52,10 @@ public class IbdTransterDataDao {
      * @return
      */
     public static String addIbdTransterData(IbdTransterData ibdTransterData) {
+
         try {
-            // queryRunner.insert(sql, rsh)
+
+            // 添加纪录
             String sql = "insert into ibd_transter_data (id, area_type, data_source, log_type, condition_stime, condition_etime, data_count, status, remark, retry) values(?,?,?,?,?,?,?,?,?,?)  ON DUPLICATE KEY UPDATE condition_stime=VALUES(condition_stime), condition_etime=VALUES(condition_etime)";
             List<Object> paramList = new ArrayList<Object> ();
             String thisId = UUID.randomUUID ().toString ().replace ( "-", "" );
@@ -68,9 +71,8 @@ public class IbdTransterDataDao {
             paramList.add ( 0 );
             queryRunner.update ( sql, paramList.toArray () );
 
-            String sql_delete = "delete from   ibd_transter_data  where status=1 and condition_etime <='2018-06-01 06:00:00'";
-
-            queryRunner.update ( sql_delete ) ;
+            // 只保留 2 天的 正确传输的数据
+            queryRunner.update ( "delete from   ibd_transter_data where status =1 and condition_stime<='" + timeDf.format ( timeDf.parse ( ibdTransterData.getConditionEtime () ).getTime () - 2 * 24 * 60 * 60 * 1000l ) + "'" );
 
             return thisId;
         } catch (Exception e) {
@@ -102,7 +104,6 @@ public class IbdTransterDataDao {
                     sql += " retry = " + ibdTransterData.getRetry () + ", ";
                 }
                 // 添加修改时间，和id的查询条件
-                DateFormat timeDf = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss" );
                 sql += " update_time = '" + timeDf.format ( new Date () ) + "' WHERE id = '" + ibdTransterData.getId () + "'";
                 queryRunner.update ( sql );
             } catch (SQLException e) {
@@ -117,7 +118,6 @@ public class IbdTransterDataDao {
      * @param stime
      * @param etime
      * @return
-     *
      */
     public static List<IbdTransterData> getExceptionRetryDataByLogType(String areaType, String logType, String stime, String etime) {
 
