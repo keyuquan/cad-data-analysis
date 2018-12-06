@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class IbdTransterDataDao {
 
-    private static QueryRunner queryRunner = new QueryRunner ( JDBCTools.getIbdDataSource () );
+    private static QueryRunner queryRunner = JDBCTools.getIbdQueryRunner ();
 
     /**
      * 获取导数据记录中，“最晚的”导入时间（断点续传）
@@ -53,14 +53,13 @@ public class IbdTransterDataDao {
     public static String addIbdTransterData(IbdTransterData ibdTransterData) {
         try {
             // queryRunner.insert(sql, rsh)
-            String sql = "insert into ibd_transter_data (id, area_type, data_source, log_type, table_name, condition_stime, condition_etime, data_count, status, remark, retry) values(?,?,?,?,?,?,?,?,?,?,?)  ON DUPLICATE KEY UPDATE table_name=VALUES(table_name), condition_etime=VALUES(condition_etime)";
+            String sql = "insert into ibd_transter_data (id, area_type, data_source, log_type, condition_stime, condition_etime, data_count, status, remark, retry) values(?,?,?,?,?,?,?,?,?,?)  ON DUPLICATE KEY UPDATE condition_stime=VALUES(condition_stime), condition_etime=VALUES(condition_etime)";
             List<Object> paramList = new ArrayList<Object> ();
             String thisId = UUID.randomUUID ().toString ().replace ( "-", "" );
             paramList.add ( thisId );
             paramList.add ( ibdTransterData.getAreaType () );
             paramList.add ( ibdTransterData.getDataSource () );
             paramList.add ( ibdTransterData.getLogType () );
-            paramList.add ( ibdTransterData.getTableName () );
             paramList.add ( ibdTransterData.getConditionStime () );
             paramList.add ( ibdTransterData.getConditionEtime () );
             paramList.add ( ibdTransterData.getDataCount () );

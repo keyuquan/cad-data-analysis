@@ -27,10 +27,6 @@ public class IbdTransterData implements Serializable {
      */
     private String LogType;
 
-    /**
-     * 查询数据来源的表名（索引名，文档名）
-     */
-    private String tableName;
 
     /**
      * 查询条件（开始时间）
@@ -75,6 +71,12 @@ public class IbdTransterData implements Serializable {
     public IbdTransterData() {
     }
 
+    public IbdTransterData(String areaType, String logType, String dataSource) {
+        AreaType = areaType;
+        this.dataSource = dataSource;
+        LogType = logType;
+    }
+
 
     public static long getSerialVersionUID() {
         return serialVersionUID;
@@ -110,14 +112,6 @@ public class IbdTransterData implements Serializable {
 
     public void setLogType(String logType) {
         LogType = logType;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
     }
 
 
