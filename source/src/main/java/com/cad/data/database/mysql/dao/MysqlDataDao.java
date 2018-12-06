@@ -1,10 +1,10 @@
 package com.cad.data.database.mysql.dao;
 
 import com.cad.data.database.mysql.utils.JDBCTools;
-import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.lang.StringUtils;
 import org.apache.flume.Context;
+
 import java.util.List;
 import java.util.Map;
 
