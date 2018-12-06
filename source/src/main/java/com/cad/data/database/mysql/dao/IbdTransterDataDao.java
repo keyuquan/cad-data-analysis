@@ -28,7 +28,7 @@ public class IbdTransterDataDao {
      */
     public static String getLatestTransferTime(IbdTransterData ibdTransterData) throws Exception {
         if ( ibdTransterData != null && StringUtils.isNotEmpty ( ibdTransterData.getAreaType () ) ) {
-            String sqlStr = "SELECT condition_etime as conditionEtime FROM ibd_transter_data WHERE area_type = '" + ibdTransterData.getAreaType () + "' ";
+            String sqlStr = "SELECT condition_etime as conditionEtime FROM ibd_transter_data WHERE  status=1 and  area_type = '" + ibdTransterData.getAreaType () + "' ";
             if ( StringUtils.isNotEmpty ( ibdTransterData.getDataSource () ) ) {
                 sqlStr += "AND data_source = '" + ibdTransterData.getDataSource () + "' ";
             }
@@ -66,8 +66,12 @@ public class IbdTransterDataDao {
             paramList.add ( DataStatusEnum.INIT.getCode () );
             paramList.add ( ibdTransterData.getRemark () );
             paramList.add ( 0 );
-
             queryRunner.update ( sql, paramList.toArray () );
+
+            String sql_delete = "delete from   ibd_transter_data  where status=1 and condition_etime <='2018-06-01 06:00:00'";
+
+            queryRunner.update ( sql_delete ) ;
+
             return thisId;
         } catch (Exception e) {
             e.printStackTrace ();
@@ -84,7 +88,6 @@ public class IbdTransterDataDao {
     public static void updateIbdTransterDataById(IbdTransterData ibdTransterData) {
         if ( StringUtils.isNotEmpty ( ibdTransterData.getId () ) ) {
             try {
-                // UPDATE ibd_transter_data SET data_count = 100 , remark = 'abc' , update_time = '2018-07-09 14:22:25' WHERE id = '0c4090413814445193dd299cb2af6816'
                 String sql = "UPDATE ibd_transter_data SET ";
                 if ( ibdTransterData.getDataCount () != null ) {
                     sql += " data_count = " + ibdTransterData.getDataCount () + ", ";
@@ -114,11 +117,12 @@ public class IbdTransterDataDao {
      * @param stime
      * @param etime
      * @return
+     *
      */
     public static List<IbdTransterData> getExceptionRetryDataByLogType(String areaType, String logType, String stime, String etime) {
 
         try {
-            String showCols = "id, retry, area_type AS 'areaType', data_source AS 'dataSource', log_type AS 'logType', table_name AS 'tableName', condition_stime AS 'conditionStime', condition_etime AS 'conditionEtime', status AS 'status', create_time AS 'createTime'";
+            String showCols = "id, retry, area_type AS 'areaType', data_source AS 'dataSource', log_type AS 'logType', condition_stime AS 'conditionStime', condition_etime AS 'conditionEtime', status AS 'status', create_time AS 'createTime'";
             String sql = "SELECT " + showCols + " FROM ibd_transter_data WHERE status <= 0 AND retry < 3 ";
             if ( StringUtils.isNotEmpty ( areaType ) ) {
                 sql += "AND area_type = '" + areaType + "' ";
