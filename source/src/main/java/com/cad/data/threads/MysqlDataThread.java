@@ -1,5 +1,6 @@
 package com.cad.data.threads;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cad.data.database.mysql.dao.MysqlDataDao;
 import com.cad.data.database.mysql.dao.IbdTransterDataDao;
 import com.cad.data.domain.IbdTransterData;
@@ -232,10 +233,10 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                             ibdTransterData.setDataCount ( 0l );
                             String thisLogId = IbdTransterDataDao.addIbdTransterData ( ibdTransterData );
                             // 2: 查询数据，并导入到channel中
-                            List<Object[]> dataList = null;
+                            List<Map<String, Object>> dataList = null;
                             try {
                                 dataList = MysqlDataDao.getMysqlData ( flumeContext, timeStr_begin, timeStr_end );
-                                LOGGER.info ( "@@@ timeStr_begin : " + timeStr_begin + "   " + timeStr_end + "  count= " + dataList.size () );
+                                // LOGGER.info ( "@@@ timeStr_begin : " + timeStr_begin + "   " + timeStr_end + "  count= " + dataList.size () );
                             } catch (Exception e) {
                                 e.printStackTrace ();
                                 LOGGER.error ( "@@@ search error : " + e.getMessage () );
@@ -291,7 +292,7 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
                     if ( dataList != null && dataList.size () > 0 ) {
                         for (IbdTransterData thisIbdTransterData : dataList) {
                             if ( thisIbdTransterData != null ) {
-                                List<Object[]> retryDataList = null;
+                                List<Map<String, Object>> retryDataList = null;
                                 try {
                                     String thisConditionStime = thisIbdTransterData.getConditionStime ();
                                     String thisConditionEtime = thisIbdTransterData.getConditionEtime ();
@@ -325,12 +326,12 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
         super.start ();
     }
 
-    private void sendMassageTochannel(List<Object[]> dataList) {
+    private void sendMassageTochannel(List<Map<String, Object>> dataList) {
         if ( dataList != null && dataList.size () > 0 ) {
             List<Event> retryEventList = new ArrayList<Event> ();
-            for (Object[] thisLogReq : dataList) {
+            for (Map<String, Object> thisLogReq : dataList) {
                 if ( thisLogReq != null ) {
-                    Event thisEvent = EventBuilder.withBody ( Arrays.toString ( thisLogReq ), Charset.forName ( "UTF-8" ) );
+                    Event thisEvent = EventBuilder.withBody ( JSONObject.toJSONString ( thisLogReq ), Charset.forName ( "UTF-8" ) );
                     retryEventList.add ( thisEvent );
                 }
             }
