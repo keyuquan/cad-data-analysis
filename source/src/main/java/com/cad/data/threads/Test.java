@@ -2,7 +2,6 @@ package com.cad.data.threads;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cad.data.database.mysql.utils.JDBCTools;
-import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.ArrayListHandler;
 import org.apache.commons.dbutils.handlers.MapListHandler;
 import org.apache.commons.lang.StringUtils;
@@ -10,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +19,8 @@ public class Test {
 
         try {
             DateFormat timeDf = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss" );
+            System.out.println ( timeDf.format ( 1544096674683l));
+
             if ( StringUtils.isNotEmpty ( "2018-01-01 00:00:01" ) ) {
                 System.out.println ( timeDf.parse ( "2018-01-01 00:00:01" ).getTime () );
             }
@@ -29,7 +29,7 @@ public class Test {
             System.out.println ( System.currentTimeMillis () );
             System.out.println ( timeDf.parse ( "2018-01-01 00:00:01" ).getTime () );
 
-            System.out.println ( timeDf.format ( new Date ().getTime () - 5* 24*60*60*1000l ) );
+
 
 
 //            String sql = "UPDATE ibd_transter_data SET ";
