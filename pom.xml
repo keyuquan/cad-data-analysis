@@ -12,6 +12,7 @@
         <module>source</module>
         <module>streams</module>
         <module>jobs</module>
+        <module>sink</module>
     </modules>
 
 
