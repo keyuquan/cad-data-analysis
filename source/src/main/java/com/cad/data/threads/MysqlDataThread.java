@@ -331,7 +331,7 @@ public class MysqlDataThread extends AbstractSource implements Configurable, Eve
             List<Event> retryEventList = new ArrayList<Event> ();
             for (Map<String, Object> thisLogReq : dataList) {
                 if ( thisLogReq != null ) {
-                    Event thisEvent = EventBuilder.withBody ( JSONObject.toJSONString ( thisLogReq ), Charset.forName ( "UTF-8" ) );
+                    Event thisEvent = EventBuilder.withBody ( JSONObject.toJSONStringWithDateFormat ( thisLogReq, "yyyy-MM-dd HH:mm:ss" ), Charset.forName ( "UTF-8" ) );
                     retryEventList.add ( thisEvent );
                 }
             }

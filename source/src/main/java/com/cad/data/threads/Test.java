@@ -59,7 +59,8 @@ public class Test {
 
             if ( resultList2 != null && resultList2.size () > 0 ) {
                 for (Map<String, Object> map : resultList2) {
-                    System.out.println( JSONObject.toJSONString(map));
+                    System.out.println(map);
+                    System.out.println( JSONObject.toJSONStringWithDateFormat (map,"yyyy-MM-dd HH:mm:ss"));
                 }
 
             }
