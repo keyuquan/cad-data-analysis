@@ -10,6 +10,7 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/cad-data-analysis/pom.xml" />
+        <option value="$PROJECT_DIR$/jobs/pom.xml" />
         <option value="$PROJECT_DIR$/streams/jobs/pom.xml" />
       </set>
     </option>

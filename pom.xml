@@ -11,8 +11,9 @@
     <modules>
         <module>source</module>
         <module>streams</module>
-        <module>jobs</module>
         <module>sink</module>
+        <module>common</module>
+        <module>jobs</module>
     </modules>
 
 

@@ -6,13 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="common" />
         <module name="jobs" />
+        <module name="sink" />
         <module name="source" />
         <module name="streams" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="caddataanalysis" target="1.5" />
+      <module name="jobs" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
