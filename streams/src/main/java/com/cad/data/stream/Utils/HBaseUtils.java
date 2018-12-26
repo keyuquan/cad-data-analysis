@@ -1,4 +1,4 @@
-package com.cad.data.stream.Operation;
+package com.cad.data.stream.Utils;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -8,7 +8,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.IOException;
 
-public class HBaseOperation {
+public class HBaseUtils {
 
     private static Configuration conf = HBaseConfiguration.create ();
     private static HTable table_alarm_event = null;
