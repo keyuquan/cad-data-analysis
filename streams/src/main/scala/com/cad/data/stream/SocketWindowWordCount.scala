@@ -1,6 +1,6 @@
 package com.cad.data.stream
 
-import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
+import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.time.Time
 
 object SocketWindowWordCount {
