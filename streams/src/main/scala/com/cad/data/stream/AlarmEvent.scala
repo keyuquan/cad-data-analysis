@@ -15,8 +15,8 @@ object AlarmEvent {
     properties.setProperty("zookeeper.connect", "master:2181")
 
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-    val ds_data: DataStream[String] = env
-      .addSource(new FlinkKafkaConsumer[String]("test", new SimpleStringSchema(), properties))
+    env.enableCheckpointing(100000l)
+    val ds_data: DataStream[String] = env.addSource(new FlinkKafkaConsumer[String]("test", new SimpleStringSchema(), properties))
 
     ds_data.map(row => {
       HBaseOperation.putData("Flink2HBase", "info", "data", row.toString, row.toString)
