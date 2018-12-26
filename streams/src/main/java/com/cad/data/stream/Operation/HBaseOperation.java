@@ -13,7 +13,7 @@ public class HBaseOperation {
     private static Configuration conf = HBaseConfiguration.create ();
     private static HTable table_alarm_event = null;
 
-    public static HTable getSlarmEventTable() throws IOException {
+    public static HTable getAlarmEventTable() throws IOException {
 
         conf.set ( "hbase.zookeeper.quorum", "master:2181" );
         conf.set ( "hbase.defaults.for.version.skip", "true" );

@@ -23,13 +23,13 @@ object AlarmEvent {
 
     ds_data.map(row => {
 
-      val table_alarm_event = HBaseOperation.getSlarmEventTable()
+      val table_alarm_event = HBaseOperation.getAlarmEventTable()
       val bean_alarm_event: AlarmEventBean = JsonUtils.fromAlarmEventBeanJson(row)
       val rowKey = bean_alarm_event.getAlarmEventId.toString
       HBaseOperation.putData(table_alarm_event, "info", "data", rowKey, row.toString)
 
     })
-
+    ds_data.print()
     env.execute("AlarmEvent 2")
 
   }
