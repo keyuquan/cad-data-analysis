@@ -27,7 +27,6 @@ object AlarmEvent {
       HBaseOperation.putData("alarm_event", "info", "data", rowKey, row.toString)
     })
 
-    ds_data.print()
     env.execute("AlarmEvent")
 
   }
