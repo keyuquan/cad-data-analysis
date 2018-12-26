@@ -1,4 +1,4 @@
-package com.cad.data.stream.utils;
+package com.cad.data.utils;
 
 import com.google.gson.Gson;
 
