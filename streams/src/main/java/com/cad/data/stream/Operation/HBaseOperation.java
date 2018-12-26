@@ -1,4 +1,4 @@
-package com.cad.data.stream;
+package com.cad.data.stream.Operation;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -28,13 +28,12 @@ public class HBaseOperation {
      *
      * @throws IOException
      */
-    public static void putData(String tableName, String Column, String cell, String rowkey, String msg) throws IOException {
+    public static void putData(String tableName, String Column, String cell, String rowKey, String msg) throws IOException {
         HTable table = getTable ( tableName );
-        Put put = new Put ( Bytes.toBytes ( rowkey ) );
-        put.add ( Bytes.toBytes ( Column ),//
-                Bytes.toBytes ( cell ),//
-                Bytes.toBytes ( msg ) );
+        Put put = new Put ( Bytes.toBytes ( rowKey ) );
+        put.add ( Bytes.toBytes ( Column ), Bytes.toBytes ( cell ), Bytes.toBytes ( msg ) );
         table.put ( put );
+        table.flushCommits ();
         table.close ();
     }
 }
