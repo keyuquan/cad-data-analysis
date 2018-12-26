@@ -18,7 +18,7 @@ object AlarmEvent {
     properties.setProperty("zookeeper.connect", "master:2181")
 
     val env: StreamExecutionEnvironment = StreamExecutionEnvironment.getExecutionEnvironment
-    env.enableCheckpointing(100000l)
+    env.enableCheckpointing(60000)
     val ds_data: DataStream[String] = env.addSource(new FlinkKafkaConsumer[String]("test", new SimpleStringSchema(), properties))
 
     ds_data.map(row => {
@@ -30,7 +30,7 @@ object AlarmEvent {
 
     })
 
-    env.execute("AlarmEvent")
+    env.execute("AlarmEvent 2")
 
   }
 
