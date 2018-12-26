@@ -19,7 +19,7 @@ object AlarmEvent {
       .addSource(new FlinkKafkaConsumer[String]("test", new SimpleStringSchema(), properties))
 
     ds_data.map(row => {
-      HBaseOperation.putData(HBaseOperation.getTable("Flink2HBase"), "info", "data", row.toString, row.toString)
+      HBaseOperation.putData("Flink2HBase", "info", "data", row.toString, row.toString)
     })
 
     ds_data.print()
