@@ -1,4 +1,4 @@
-package com.cad.data.stream
+package com.cad.data.stream.jobs
 
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.api.windowing.time.Time
