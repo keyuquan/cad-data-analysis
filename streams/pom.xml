@@ -70,6 +70,27 @@
             <artifactId>slf4j-nop</artifactId>
             <version>1.7.2</version>
         </dependency>
+
+        <!-- hbase 相关依赖 -->
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase</artifactId>
+            <version>1.2.0</version>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-server</artifactId>
+            <version>1.2.0</version>
+            <type>pom</type>
+        </dependency>
     </dependencies>
 
     <build>
