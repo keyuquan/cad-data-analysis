@@ -11,15 +11,18 @@ import java.io.IOException;
 public class HBaseOperation {
 
     private static Configuration conf = HBaseConfiguration.create ();
+    private static HTable table_alarm_event = null;
 
-    public static HTable getTable(String tableName) throws IOException {
+    public static HTable getSlarmEventTable() throws IOException {
 
         conf.set ( "hbase.zookeeper.quorum", "master:2181" );
         conf.set ( "hbase.defaults.for.version.skip", "true" );
 
-        HTable table = new HTable ( conf, tableName );
-
-        return table;
+        if ( table_alarm_event == null ) {
+            table_alarm_event = new HTable ( conf, "alarm_event" );
+            table_alarm_event.setAutoFlushTo ( true );
+        }
+        return table_alarm_event;
 
     }
 
@@ -28,12 +31,11 @@ public class HBaseOperation {
      *
      * @throws IOException
      */
-    public static void putData(String tableName, String Column, String cell, String rowKey, String msg) throws IOException {
-        HTable table = getTable ( tableName );
+    public static void putData(HTable table, String Column, String cell, String rowKey, String msg) throws IOException {
         Put put = new Put ( Bytes.toBytes ( rowKey ) );
         put.add ( Bytes.toBytes ( Column ), Bytes.toBytes ( cell ), Bytes.toBytes ( msg ) );
         table.put ( put );
         table.flushCommits ();
-        table.close ();
+
     }
 }

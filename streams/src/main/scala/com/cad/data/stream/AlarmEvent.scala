@@ -22,9 +22,12 @@ object AlarmEvent {
     val ds_data: DataStream[String] = env.addSource(new FlinkKafkaConsumer[String]("test", new SimpleStringSchema(), properties))
 
     ds_data.map(row => {
-      val am_bean: AlarmEventBean = JsonUtils.fromAlarmEventBeanJson(row)
-      val rowKey = am_bean.getAlarmEventId.toString
-      HBaseOperation.putData("alarm_event", "info", "data", rowKey, row.toString)
+
+      val table_alarm_event = HBaseOperation.getSlarmEventTable()
+      val bean_alarm_event: AlarmEventBean = JsonUtils.fromAlarmEventBeanJson(row)
+      val rowKey = bean_alarm_event.getAlarmEventId.toString
+      HBaseOperation.putData(table_alarm_event, "info", "data", rowKey, row.toString)
+
     })
 
     env.execute("AlarmEvent")
