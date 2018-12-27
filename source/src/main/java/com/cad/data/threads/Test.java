@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class Test {
 
@@ -18,9 +19,17 @@ public class Test {
     public static void main(String[] args) {
 
         try {
-            DateFormat timeDf = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss" );
-            System.out.println ( timeDf.format ( 1544096674683l));
+            String carnumber = "粤B12345";
 
+            Pattern p = Pattern.compile ( "^[京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(?:(?![A-Z]{4})[A-Z0-9]){4}[A-Z0-9挂学警港澳]{1}$" );
+
+            System.out.println ( p.matcher ( carnumber ).matches () );
+
+            //1545878423888
+            //1545879308697
+            DateFormat timeDf = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss" );
+            System.out.println ( timeDf.format ( 1545878423888l ) );
+            System.out.println ( timeDf.format ( 1545879308697l ) );
             if ( StringUtils.isNotEmpty ( "2018-01-01 00:00:01" ) ) {
                 System.out.println ( timeDf.parse ( "2018-01-01 00:00:01" ).getTime () );
             }
@@ -28,8 +37,6 @@ public class Test {
 
             System.out.println ( System.currentTimeMillis () );
             System.out.println ( timeDf.parse ( "2018-01-01 00:00:01" ).getTime () );
-
-
 
 
 //            String sql = "UPDATE ibd_transter_data SET ";
@@ -59,8 +66,8 @@ public class Test {
 
             if ( resultList2 != null && resultList2.size () > 0 ) {
                 for (Map<String, Object> map : resultList2) {
-                    System.out.println(map);
-                    System.out.println( JSONObject.toJSONStringWithDateFormat (map,"yyyy-MM-dd HH:mm:ss"));
+                    System.out.println ( map );
+                    System.out.println ( JSONObject.toJSONStringWithDateFormat ( map, "yyyy-MM-dd HH:mm:ss" ) );
                 }
 
             }
