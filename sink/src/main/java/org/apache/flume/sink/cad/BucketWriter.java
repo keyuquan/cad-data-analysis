@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.flume.sink.xmen;
+package org.apache.flume.sink.cad;
 
 import org.apache.flume.Context;
 import org.apache.flume.Event;

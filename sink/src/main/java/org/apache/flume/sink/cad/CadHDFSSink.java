@@ -16,16 +16,14 @@
  * limitations under the License.
  */
 
-package org.apache.flume.sink.xmen;
+package org.apache.flume.sink.cad;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.lang.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * 数据中心定制化HDFS SINK

@@ -1,4 +1,4 @@
-package org.apache.flume.sink.xmen;
+package org.apache.flume.sink.cad;
 
 import com.google.gson.Gson;
 
