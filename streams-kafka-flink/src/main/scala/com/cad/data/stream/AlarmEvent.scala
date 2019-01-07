@@ -2,11 +2,11 @@ package com.cad.data.stream
 
 import java.util.Properties
 
-import com.cad.data.stream.Bean.AlarmEventBean
-import com.cad.data.stream.Utils.{HBaseUtils, JsonUtils}
+import com.cad.data.stream.Utils.HBaseUtils
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer
 import org.apache.flink.streaming.util.serialization.SimpleStringSchema
+import org.json.JSONObject
 
 object AlarmEvent {
 
@@ -23,8 +23,9 @@ object AlarmEvent {
     ds_data.map(row => {
 
       val table_alarm_event = HBaseUtils.getAlarmEventTable()
-      val bean_alarm_event: AlarmEventBean = JsonUtils.fromAlarmEventBeanJson(row)
-      val rowKey = bean_alarm_event.getAlarmEventId.toString
+      val jsonObject = new JSONObject(row)
+      val rowKey = jsonObject.get("alarmEventId").toString
+
       HBaseUtils.putData(table_alarm_event, "info", "data", rowKey, row.toString)
 
     })
