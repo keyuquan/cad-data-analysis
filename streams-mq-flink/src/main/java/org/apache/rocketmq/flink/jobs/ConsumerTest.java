@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.apache.rocketmq.flink.example;
+package org.apache.rocketmq.flink.jobs;
 
 import java.util.List;
 

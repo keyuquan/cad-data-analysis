@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" addBOMForNewFiles="with NO BOM">
+    <file url="file://$PROJECT_DIR$/flume-sink-mq" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/rocketmq-flink" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rocketmq-flink" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/rocketmq-flume-sink" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/streams-mq-flink" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/../rocketmq-externals/rocketmq-flink" charset="UTF-8" />
   </component>
 </project>

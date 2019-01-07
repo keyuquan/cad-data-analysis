@@ -7,6 +7,13 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/rocketmq-flume-sink/pom.xml" />
         <option value="$PROJECT_DIR$/rocketmq-flink/pom.xml" />
+        <option value="$PROJECT_DIR$/streams-mq-flink/pom.xml" />
+        <option value="$PROJECT_DIR$/streams-kafka-flink/pom.xml" />
+        <option value="$PROJECT_DIR$/spark-jobs/pom.xml" />
+        <option value="$PROJECT_DIR$/flume-source-db/pom.xml" />
+        <option value="$PROJECT_DIR$/flume-sink-mq/pom.xml" />
+        <option value="$PROJECT_DIR$/flume-sink-hdfs/pom.xml" />
+        <option value="$PROJECT_DIR$/common/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

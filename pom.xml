@@ -9,14 +9,13 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>source</module>
-        <module>streams</module>
-        <module>sink</module>
+        <module>flume-sink-hdfs</module>
+        <module>flume-sink-mq</module>
+        <module>flume-source-db</module>
         <module>common</module>
-        <module>jobs</module>
-        <module>rocketmq-flume-sink</module>
-        <module>rocketmq-flink</module>
-        <module>rocketmq-flink</module>
+        <module>spark-jobs</module>
+        <module>streams-kafka-flink</module>
+        <module>streams-mq-flink</module>
     </modules>
 
 

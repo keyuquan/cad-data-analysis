@@ -16,24 +16,17 @@
  * limitations under the License.
  */
 
-package org.apache.rocketmq.flink.example;
+package org.apache.rocketmq.flink.jobs;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.ProcessFunction;
-import org.apache.flink.util.Collector;
 import org.apache.rocketmq.flink.RocketMQConfig;
-import org.apache.rocketmq.flink.RocketMQSink;
 import org.apache.rocketmq.flink.RocketMQSource;
-import org.apache.rocketmq.flink.common.selector.DefaultTopicSelector;
 import org.apache.rocketmq.flink.common.serialization.SimpleKeyValueDeserializationSchema;
-import org.apache.rocketmq.flink.common.serialization.SimpleKeyValueSerializationSchema;
 
-public class RocketMQFlinkExample {
+public class AlarmEvent {
     public static void main(String[] args) {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment ();
 
@@ -49,24 +42,8 @@ public class RocketMQFlinkExample {
         producerProps.setProperty ( RocketMQConfig.NAME_SERVER_ADDR, "master:9876" );
 
         DataStreamSource aa = env.addSource ( new RocketMQSource ( new SimpleKeyValueDeserializationSchema ( "id", "body" ), consumerProps ) );
-//            .name("rocketmq-source")
-//            .setParallelism(2)
-//            .process(new ProcessFunction<Map, Map>() {
-//                @Override
-//                public void processElement(Map in, Context ctx, Collector<Map> out) throws Exception {
-//                    HashMap result = new HashMap();
-//                    result.put("id", in.get("id"));
-//                    String[] arr = in.get("address").toString().split("\\s+");
-//                    result.put("province", arr[arr.length-1]);
-//                    out.collect(result);
-//                }
-//            })
-//            .name("upper-processor")
-//            .setParallelism(2)
-//            .addSink(new RocketMQSink(new SimpleKeyValueSerializationSchema("id", "province"),
-//                new DefaultTopicSelector("flink-sink2"), producerProps).withBatchFlushOnCheckpoint(true))
-//            .name("rocketmq-sink")
-//            .setParallelism(2);
+
+
         aa.print ();
         try {
             env.execute ( "rocketmq-flink-example" );

@@ -7,19 +7,19 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="common" />
-        <module name="jobs" />
-        <module name="rocketmq-flink" />
-        <module name="rocketmq-flume-sink" />
-        <module name="sink" />
-        <module name="source" />
-        <module name="streams" />
+        <module name="flume-sink-hdfs" />
+        <module name="flume-sink-mq" />
+        <module name="flume-source-db" />
+        <module name="spark-jobs" />
+        <module name="streams-kafka-flink" />
+        <module name="streams-mq-flink" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="caddataanalysis" target="1.5" />
       <module name="interceptor" target="1.5" />
-      <module name="jobs" target="1.5" />
       <module name="rocketmqflink" target="1.8" />
+      <module name="spark-jobs" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
