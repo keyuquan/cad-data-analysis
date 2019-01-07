@@ -153,6 +153,7 @@
             </plugin>
         </plugins>
 
+
         <!--manven编译后的jar包名字 -->
         <finalName>streams-kafka-flink</finalName>
 
