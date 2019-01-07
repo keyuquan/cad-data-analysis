@@ -7,5 +7,11 @@
         <parameter value="D:\workspace\cad-data-analysis\streams\target/.scala_dependencies" />
       </parameters>
     </profile>
+    <profile name="Maven 2" modules="streams-kafka-flink">
+      <parameters>
+        <parameter value="-dependencyfile" />
+        <parameter value="D:\workspace\cad-data-analysis\streams-kafka-flink\target/.scala_dependencies" />
+      </parameters>
+    </profile>
   </component>
 </project>

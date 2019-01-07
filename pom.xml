@@ -16,6 +16,7 @@
         <module>spark-jobs</module>
         <module>streams-kafka-flink</module>
         <module>streams-mq-flink</module>
+        <module>streams-mq-flink</module>
     </modules>
 
 

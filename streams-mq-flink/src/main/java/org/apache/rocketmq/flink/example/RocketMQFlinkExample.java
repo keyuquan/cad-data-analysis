@@ -16,7 +16,9 @@
  * limitations under the License.
  */
 
-package org.apache.rocketmq.flink.common.jobs;
+package org.apache.rocketmq.flink.example;
+
+import java.util.Properties;
 
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -24,9 +26,7 @@ import org.apache.rocketmq.flink.RocketMQConfig;
 import org.apache.rocketmq.flink.RocketMQSource;
 import org.apache.rocketmq.flink.common.serialization.SimpleKeyValueDeserializationSchema;
 
-import java.util.Properties;
-
-public class AlarmEvent {
+public class RocketMQFlinkExample {
     public static void main(String[] args) {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment ();
 
@@ -42,7 +42,6 @@ public class AlarmEvent {
         producerProps.setProperty ( RocketMQConfig.NAME_SERVER_ADDR, "master:9876" );
 
         DataStreamSource aa = env.addSource ( new RocketMQSource ( new SimpleKeyValueDeserializationSchema ( "id", "body" ), consumerProps ) );
-
 
         aa.print ();
         try {

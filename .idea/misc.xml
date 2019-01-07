@@ -7,7 +7,6 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/rocketmq-flume-sink/pom.xml" />
         <option value="$PROJECT_DIR$/rocketmq-flink/pom.xml" />
-        <option value="$PROJECT_DIR$/streams-mq-flink/pom.xml" />
         <option value="$PROJECT_DIR$/streams-kafka-flink/pom.xml" />
         <option value="$PROJECT_DIR$/spark-jobs/pom.xml" />
         <option value="$PROJECT_DIR$/flume-source-db/pom.xml" />
