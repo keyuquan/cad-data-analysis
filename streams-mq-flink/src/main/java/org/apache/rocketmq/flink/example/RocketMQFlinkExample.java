@@ -18,13 +18,26 @@
 
 package org.apache.rocketmq.flink.example;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.avro.data.Json;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.functions.ProcessFunction;
+import org.apache.flink.util.Collector;
+import org.apache.hadoop.hbase.client.HTable;
 import org.apache.rocketmq.flink.RocketMQConfig;
+import org.apache.rocketmq.flink.RocketMQSink;
 import org.apache.rocketmq.flink.RocketMQSource;
+
+import org.apache.rocketmq.flink.Utils.HBaseUtils;
+import org.apache.rocketmq.flink.common.selector.DefaultTopicSelector;
 import org.apache.rocketmq.flink.common.serialization.SimpleKeyValueDeserializationSchema;
+import org.apache.rocketmq.flink.common.serialization.SimpleKeyValueSerializationSchema;
+import org.json.JSONObject;
 
 public class RocketMQFlinkExample {
     public static void main(String[] args) {
@@ -41,9 +54,22 @@ public class RocketMQFlinkExample {
         Properties producerProps = new Properties ();
         producerProps.setProperty ( RocketMQConfig.NAME_SERVER_ADDR, "master:9876" );
 
-        DataStreamSource aa = env.addSource ( new RocketMQSource ( new SimpleKeyValueDeserializationSchema ( "id", "body" ), consumerProps ) );
+        SingleOutputStreamOperator aa = env.addSource ( new RocketMQSource ( new SimpleKeyValueDeserializationSchema ( "id", "body" ), consumerProps ) )
+                .process ( new ProcessFunction<Map, Map> () {
+                    @Override
+                    public void processElement(Map in, Context ctx, Collector<Map> out) throws Exception {
+                        System.out.println ( in.get ( "body" ) );
 
-        aa.print ();
+                        HTable hTable = HBaseUtils.getAlarmEventTable ();
+                        String body = (String) in.get ( "body" );
+                        JSONObject jsonObject = new JSONObject ( body );
+                        String rowKey = jsonObject.get ( "alarmEventId" ).toString ();
+                        HBaseUtils.putData ( hTable, "info", "data", rowKey, body );
+
+                    }
+                } );
+
+
         try {
             env.execute ( "rocketmq-flink-example" );
         } catch (Exception e) {
