@@ -124,7 +124,7 @@
         </plugins>
 
         <!--manven编译后的jar包名字 -->
-        <finalName>flume-ng-mq-sink</finalName>
+        <finalName>flume-sink-mq</finalName>
 
 
     </build>

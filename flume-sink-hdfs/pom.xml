@@ -167,7 +167,7 @@
         </plugins>
 
         <!--manven编译后的jar包名字 -->
-        <finalName>flume-ng-mixcus-sink</finalName>
+        <finalName>flume-sink-hdfs</finalName>
 
 
     </build>
