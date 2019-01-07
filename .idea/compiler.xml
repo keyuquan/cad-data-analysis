@@ -9,6 +9,7 @@
         <module name="common" />
         <module name="jobs" />
         <module name="rocketmq-flink" />
+        <module name="rocketmq-flume-sink" />
         <module name="sink" />
         <module name="source" />
         <module name="streams" />

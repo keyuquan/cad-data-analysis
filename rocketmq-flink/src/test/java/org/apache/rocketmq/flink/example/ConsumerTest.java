@@ -29,10 +29,10 @@ import org.apache.rocketmq.common.message.MessageExt;
 
 public class ConsumerTest {
     public static void main(String[] args) {
-        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("g00003");
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("BINLOG_PRODUCER_GROUP");
         consumer.setNamesrvAddr("master:9876");
         try {
-            consumer.subscribe("flink-source2", "*");
+            consumer.subscribe("mysql-mq-flink", "*");
         } catch (MQClientException e) {
             e.printStackTrace();
         }
@@ -40,7 +40,7 @@ public class ConsumerTest {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
                 for (MessageExt msg : msgs) {
-                    System.out.println(msg.getKeys() + ":" + new String(msg.getBody()));
+                    System.out.println(new String(msg.getBody()));
                 }
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }

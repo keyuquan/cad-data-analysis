@@ -25,17 +25,16 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
 
 public class ProducerTest {
-
     public static void main(String[] args) {
-        DefaultMQProducer producer = new DefaultMQProducer("g00003");
+        DefaultMQProducer producer = new DefaultMQProducer("BINLOG_PRODUCER_GROUP");
         producer.setNamesrvAddr("master:9876");
         try {
             producer.start();
         } catch (MQClientException e) {
             e.printStackTrace();
         }
-        for (int i = 0; i < 10000; i++) {
-            Message msg = new Message("flink-source2" , "", "id_"+i, ("country_X province_" + i).getBytes());
+        for (int i = 0; i < 1000000; i++) {
+            Message msg = new Message("mysql-mq-flink" , "", "id_"+i, ("country_X province_" + i).getBytes());
             try {
                 producer.send(msg);
             } catch (MQClientException e) {
