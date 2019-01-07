@@ -59,7 +59,7 @@ public class RocketMQSink extends AbstractSink implements Configurable {
 
     private static final Logger log = LoggerFactory.getLogger(RocketMQSink.class);
 
-    private String nameServer="";
+    private String nameServer;
     private String topic;
     private String tag;
     private String producerGroup;
