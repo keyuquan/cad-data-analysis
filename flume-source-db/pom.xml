@@ -10,11 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>flume-source-db</artifactId>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.flume</groupId>
@@ -204,6 +202,26 @@
         <!--manven编译后的jar包名字 -->
         <finalName>flume-source-db</finalName>
 
+        <!--manven需要编译的资源 -->
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>profile_test/**</exclude>
+                    <exclude>profile_online/**</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources/profile_${profiles.active}</directory>
+            </resource>
+        </resources>
 
     </build>
 
