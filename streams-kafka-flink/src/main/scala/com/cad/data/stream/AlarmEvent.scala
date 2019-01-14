@@ -21,7 +21,7 @@ object AlarmEvent {
     val ds_data: DataStream[String] = env.addSource(new FlinkKafkaConsumer[String]("test", new SimpleStringSchema(), properties))
 
     ds_data.map(row => {
-
+      System.out.println(System.currentTimeMillis());
       val table_alarm_event = HBaseUtils.getAlarmEventTable()
       val jsonObject = new JSONObject(row)
       val rowKey = jsonObject.get("alarmEventId").toString
