@@ -58,6 +58,7 @@ public class RocketMQFlinkExample {
                 .process ( new ProcessFunction<Map, Map> () {
                     @Override
                     public void processElement(Map in, Context ctx, Collector<Map> out) throws Exception {
+                        System.out.println ( in.get ( "body" ) );
 
                         HTable hTable = HBaseUtils.getAlarmEventTable ();
                         String body = (String) in.get ( "body" );
